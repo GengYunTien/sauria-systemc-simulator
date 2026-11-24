@@ -36,7 +36,8 @@ RUN apt-get update && apt-get install -y \
     git make cmake g++ flex bison \
     clang \
     perl \
-    python3 \
+    python3 python3-pip \
+    gtkwave \
     libfl2 zlib1g wget curl vim \
  && rm -rf /var/lib/apt/lists/*
 
@@ -52,6 +53,34 @@ ENV VERILATOR_ROOT=/opt/verilator
 ENV SYSTEMC_HOME=/opt/systemc
 ENV LD_LIBRARY_PATH="/opt/systemc/lib:$LD_LIBRARY_PATH"
 ENV CPLUS_INCLUDE_PATH="/opt/systemc/include"
+
+# Python dependencies for SAURIA simulation framework
+# PyTorch CPU-only: functionally identical to CUDA build on a CPU-only machine
+RUN pip3 install --no-cache-dir \
+    torch==2.1.2+cpu \
+    torchvision==0.16.2+cpu \
+    torchaudio==2.1.2+cpu \
+    --index-url https://download.pytorch.org/whl/cpu
+
+# Remaining packages from 3rdparty/sauria/Python/requirements_pip.txt
+RUN pip3 install --no-cache-dir \
+    numpy==1.23.1 \
+    scipy==1.10.0 \
+    matplotlib==3.6.2 \
+    Pillow==10.0.1 \
+    PyYAML==6.0.1 \
+    sympy==1.12 \
+    networkx==3.1 \
+    packaging==23.2 \
+    six==1.16.0 \
+    python-dateutil==2.8.2 \
+    pyparsing==3.1.1 \
+    kiwisolver==1.4.5 \
+    cycler==0.12.1 \
+    fonttools==4.47.0 \
+    contourpy==1.1.0 \
+    ipykernel \
+    python-dotenv
 
 WORKDIR /workspace
 CMD ["/bin/bash"]
