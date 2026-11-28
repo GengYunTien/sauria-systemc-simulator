@@ -24,12 +24,12 @@ test-sim-build:
 	$(MAKE) -C $(SAURIA_SIM_DIR)
 
 $(BUILD_DIR)/Makefile:
-	cmake -S . -B $(BUILD_DIR)
+	cmake -S . -B $(BUILD_DIR) -DCMAKE_BUILD_TYPE=Debug \
+	      -DSystemCLanguage_DIR=/opt/systemc/lib/cmake/SystemCLanguage
 
 test: $(BUILD_DIR)/Makefile
 	cmake --build $(BUILD_DIR)
 	ctest --test-dir $(BUILD_DIR) --output-on-failure
 
 clean:
-	docker rmi $(IMAGE)
 	rm -rf $(BUILD_DIR)
